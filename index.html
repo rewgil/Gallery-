@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&family=Noto+Sans+Thai:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quizScreen" class="quiz-screen">
+    <div class="quiz-box">
+      <p class="quiz-label">ก่อนเข้าชม กรุณาตอบคำถาม</p>
+      <h2 class="quiz-question">ฉายาของพระริวกิวตอนบวชคือข้อไหน?</h2>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="false">สุพรรณบุรี</button>
+        <button class="quiz-opt" data-correct="false">สุวรรณภูมิ</button>
+        <button class="quiz-opt" data-correct="true">สุรวิโช</button>
+        <button class="quiz-opt" data-correct="false">สุสุเปอร์โนวา</button>
+      </div>
+      <p class="quiz-feedback" id="quizFeedback"></p>
+    </div>
+  </div>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="confetti" style="position:fixed;inset:0;pointer-events:none;z-index:999;display:none;"></canvas>
+
+  <header>
+    <div class="dev-credit">Dev by Sorrawich</div>
+    <a href="admin.html" class="gear-btn" title="Admin">&#9881;</a>
+    <nav class="menu" id="menu">
+      <a href="#display" class="menu-item active">
+        <div class="avatar"><img src="https://picsum.photos/seed/vibe99/200/200" alt="Display"></div>
+        <span>Display</span>
+      </a>
+      <a href="#everyone" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/all99/200/200" alt="Everyone"></div>
+        <span>Everyone</span>
+      </a>
+      <a href="#nueathong" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/nue1/200/200" alt="Nueathong"></div>
+        <span>Nueathong</span>
+      </a>
+      <a href="#pingpong" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/ping1/200/200" alt="Pingpong"></div>
+        <span>Pingpong</span>
+      </a>
+      <a href="#flok" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/flok1/200/200" alt="Flok"></div>
+        <span>Flok</span>
+      </a>
+      <a href="#beer" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/beer1/200/200" alt="Beer"></div>
+        <span>Beer</span>
+      </a>
+      <a href="#kukkik" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/kuk1/200/200" alt="Kukkik"></div>
+        <span>Kukkik</span>
+      </a>
+      <a href="#bamboo" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/bam1/200/200" alt="Bamboo"></div>
+        <span>Bamboo</span>
+      </a>
+      <a href="#oreo" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/ore1/200/200" alt="Oreo"></div>
+        <span>Oreo</span>
+      </a>
+      <a href="#print" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/pri1/200/200" alt="Print"></div>
+        <span>Print</span>
+      </a>
+      <a href="#gazilot" class="menu-item">
+        <div class="avatar"><img src="https://picsum.photos/seed/gaz1/200/200" alt="Gazilot"></div>
+        <span>Gazilot</span>
+      </a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="display">
+      <div class="section-quote">
+        <blockquote>
+          "Sometimes you will never know the true value of a moment until it becomes a memory."
+          <cite>— Rewgill</cite>
+        </blockquote>
+      </div>
+      <div class="all-grid" id="allMosaic">
+        <div class="all-item a1"><div class="slide-cell"><img class="img-a" src="" alt="Display 1"><img class="img-b" src="" alt="Display 1"></div></div>
+        <div class="all-item a2"><div class="slide-cell"><img class="img-a" src="" alt="Display 2"><img class="img-b" src="" alt="Display 2"></div></div>
+        <div class="all-item a3"><div class="slide-cell"><img class="img-a" src="" alt="Display 3"><img class="img-b" src="" alt="Display 3"></div></div>
+        <div class="all-item a4"><div class="slide-cell"><img class="img-a" src="" alt="Display 4"><img class="img-b" src="" alt="Display 4"></div></div>
+        <div class="all-item a5"><div class="slide-cell"><img class="img-a" src="" alt="Display 5"><img class="img-b" src="" alt="Display 5"></div></div>
+        <div class="all-item a6"><div class="slide-cell"><img class="img-a" src="" alt="Display 6"><img class="img-b" src="" alt="Display 6"></div></div>
+        <div class="all-item a7"><div class="slide-cell"><img class="img-a" src="" alt="Display 7"><img class="img-b" src="" alt="Display 7"></div></div>
+        <div class="all-item a8"><div class="slide-cell"><img class="img-a" src="" alt="Display 8"><img class="img-b" src="" alt="Display 8"></div></div>
+      </div>
+    </section>
+
+    <section id="everyone">
+      <div class="section-title">Everyone</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/ev1/600/400" alt="Everyone 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/ev2/600/400" alt="Everyone 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/ev3/600/400" alt="Everyone 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/ev4/600/400" alt="Everyone 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/ev5/600/400" alt="Everyone 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/ev6/600/400" alt="Everyone 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/ev7/600/400" alt="Everyone 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/ev8/600/400" alt="Everyone 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="nueathong">
+      <div class="section-title">Nueathong</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/nue1/600/400" alt="Nueathong 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/nue2/600/400" alt="Nueathong 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/nue3/600/400" alt="Nueathong 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/nue4/600/400" alt="Nueathong 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/nue5/600/400" alt="Nueathong 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/nue6/600/400" alt="Nueathong 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/nue7/600/400" alt="Nueathong 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/nue8/600/400" alt="Nueathong 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="pingpong">
+      <div class="section-title">Pingpong</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/ping1/600/400" alt="Pingpong 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/ping2/600/400" alt="Pingpong 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/ping3/600/400" alt="Pingpong 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/ping4/600/400" alt="Pingpong 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/ping5/600/400" alt="Pingpong 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/ping6/600/400" alt="Pingpong 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/ping7/600/400" alt="Pingpong 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/ping8/600/400" alt="Pingpong 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="flok">
+      <div class="section-title">Flok</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/flok1/600/400" alt="Flok 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/flok2/600/400" alt="Flok 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/flok3/600/400" alt="Flok 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/flok4/600/400" alt="Flok 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/flok5/600/400" alt="Flok 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/flok6/600/400" alt="Flok 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/flok7/600/400" alt="Flok 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/flok8/600/400" alt="Flok 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="beer">
+      <div class="section-title">Beer</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/beer1/600/400" alt="Beer 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/beer2/600/400" alt="Beer 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/beer3/600/400" alt="Beer 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/beer4/600/400" alt="Beer 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/beer5/600/400" alt="Beer 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/beer6/600/400" alt="Beer 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/beer7/600/400" alt="Beer 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/beer8/600/400" alt="Beer 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="kukkik">
+      <div class="section-title">Kukkik</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/kuk1/600/400" alt="Kukkik 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/kuk2/600/400" alt="Kukkik 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/kuk3/600/400" alt="Kukkik 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/kuk4/600/400" alt="Kukkik 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/kuk5/600/400" alt="Kukkik 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/kuk6/600/400" alt="Kukkik 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/kuk7/600/400" alt="Kukkik 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/kuk8/600/400" alt="Kukkik 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="bamboo">
+      <div class="section-title">Bamboo</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/bam1/600/400" alt="Bamboo 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/bam2/600/400" alt="Bamboo 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/bam3/600/400" alt="Bamboo 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/bam4/600/400" alt="Bamboo 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/bam5/600/400" alt="Bamboo 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/bam6/600/400" alt="Bamboo 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/bam7/600/400" alt="Bamboo 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/bam8/600/400" alt="Bamboo 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="oreo">
+      <div class="section-title">Oreo</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/ore1/600/400" alt="Oreo 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/ore2/600/400" alt="Oreo 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/ore3/600/400" alt="Oreo 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/ore4/600/400" alt="Oreo 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/ore5/600/400" alt="Oreo 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/ore6/600/400" alt="Oreo 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/ore7/600/400" alt="Oreo 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/ore8/600/400" alt="Oreo 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="print">
+      <div class="section-title">Print</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/pri1/600/400" alt="Print 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/pri2/600/400" alt="Print 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/pri3/600/400" alt="Print 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/pri4/600/400" alt="Print 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/pri5/600/400" alt="Print 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/pri6/600/400" alt="Print 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/pri7/600/400" alt="Print 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/pri8/600/400" alt="Print 8" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section id="gazilot">
+      <div class="section-title">Gazilot</div>
+      <div class="all-grid">
+        <div class="all-item a1"><img src="https://picsum.photos/seed/gaz1/600/400" alt="Gazilot 1" loading="lazy"></div>
+        <div class="all-item a2"><img src="https://picsum.photos/seed/gaz2/600/400" alt="Gazilot 2" loading="lazy"></div>
+        <div class="all-item a3"><img src="https://picsum.photos/seed/gaz3/600/400" alt="Gazilot 3" loading="lazy"></div>
+        <div class="all-item a4"><img src="https://picsum.photos/seed/gaz4/600/400" alt="Gazilot 4" loading="lazy"></div>
+        <div class="all-item a5"><img src="https://picsum.photos/seed/gaz5/600/400" alt="Gazilot 5" loading="lazy"></div>
+        <div class="all-item a6"><img src="https://picsum.photos/seed/gaz6/600/400" alt="Gazilot 6" loading="lazy"></div>
+        <div class="all-item a7"><img src="https://picsum.photos/seed/gaz7/600/400" alt="Gazilot 7" loading="lazy"></div>
+        <div class="all-item a8"><img src="https://picsum.photos/seed/gaz8/600/400" alt="Gazilot 8" loading="lazy"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="ปิด">&times;</button>
+    <button class="lightbox-prev" id="lightboxPrev" aria-label="ก่อนหน้า">&#10094;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-next" id="lightboxNext" aria-label="ถัดไป">&#10095;</button>
+  </div>
+
+  <script>
+    // Menu item stagger delay - triggered after quiz
+    function triggerMenuAnimation() {
+      document.querySelectorAll('.menu-item').forEach((item, i) => {
+        setTimeout(() => item.classList.add('drop-in'), i * 80);
+      });
+    }
+
+    // Quiz
+    const quizScreen = document.getElementById('quizScreen');
+    const feedback = document.getElementById('quizFeedback');
+
+    document.querySelectorAll('.quiz-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.correct === 'true') {
+          btn.classList.add('correct');
+          feedback.textContent = '';
+          setTimeout(() => {
+            quizScreen.style.opacity = '0';
+            quizScreen.style.transition = 'opacity 0.6s ease';
+            launchConfetti();
+            setTimeout(() => {
+              quizScreen.style.display = 'none';
+              const header = document.querySelector('header');
+              header.classList.remove('header-hidden');
+              header.classList.add('header-slide-in');
+              triggerMenuAnimation();
+            }, 600);
+          }, 500);
+        } else {
+          btn.classList.add('wrong');
+          feedback.textContent = 'ไม่ถูกต้อง ลองใหม่อีกครั้ง';
+          setTimeout(() => { btn.classList.remove('wrong'); feedback.textContent = ''; }, 1000);
+        }
+      });
+    });
+
+    // Confetti
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.style.display = 'block';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['#c4b8a8','#8a7968','#e0dbd4','#5a5248','#d4cdc4','#f5f2ee','#a09080'];
+      const pieces = Array.from({ length: 80 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -10 - Math.random() * 100,
+        w: 6 + Math.random() * 6,
+        h: 3 + Math.random() * 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rot: Math.random() * Math.PI * 2,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: 1.5 + Math.random() * 2,
+        vr: (Math.random() - 0.5) * 0.1,
+        opacity: 1
+      }));
+
+      let frame;
+      let elapsed = 0;
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        elapsed++;
+        let alive = false;
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vr;
+          if (elapsed > 80) p.opacity -= 0.012;
+          if (p.opacity > 0 && p.y < canvas.height + 20) {
+            alive = true;
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          }
+        });
+        if (alive) { frame = requestAnimationFrame(draw); }
+        else { canvas.style.display = 'none'; cancelAnimationFrame(frame); }
+      }
+      draw();
+    }
+
+    // ALL section animation
+    const allSeeds = [
+      'nue1','nue2','nue3','nue4','nue5','nue6',
+      'ping1','ping2','ping3','ping4','ping5','ping6',
+      'flok1','flok2','flok3','flok4','flok5','flok6',
+      'beer1','beer2','beer3','beer4','beer5','beer6',
+      'kuk1','kuk2','kuk3','kuk4','kuk5','kuk6',
+      'bam1','bam2','bam3','bam4','bam5','bam6',
+      'ore1','ore2','ore3','ore4','ore5','ore6',
+      'pri1','pri2','pri3','pri4','pri5','pri6',
+      'gaz1','gaz2','gaz3','gaz4','gaz5','gaz6'
+    ];
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    const cells = document.querySelectorAll('#allMosaic .slide-cell');
+    let pool = shuffle(allSeeds);
+    let poolIndex = 0;
+
+    function nextSeed() {
+      if (poolIndex >= pool.length) { pool = shuffle(allSeeds); poolIndex = 0; }
+      return pool[poolIndex++];
+    }
+
+    cells.forEach(cell => {
+      const imgA = cell.querySelector('.img-a');
+      const imgB = cell.querySelector('.img-b');
+      imgA.src = `https://picsum.photos/seed/${nextSeed()}/600/400`;
+      imgB.src = `https://picsum.photos/seed/${nextSeed()}/600/400`;
+      cell._active = 'a';
+    });
+
+    function pushCell(cell) {
+      const imgA = cell.querySelector('.img-a');
+      const imgB = cell.querySelector('.img-b');
+      const isA = cell._active === 'a';
+      const current = isA ? imgA : imgB;
+      const next    = isA ? imgB : imgA;
+      const seed = nextSeed();
+
+      next.style.transition = 'none';
+      next.style.transform  = 'translateX(100%)';
+      next.style.zIndex     = '2';
+      current.style.zIndex  = '1';
+
+      const doSlide = () => {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          const t = 'transform 0.7s ease-in-out';
+          next.style.transition    = t;
+          current.style.transition = t;
+          next.style.transform     = 'translateX(0%)';
+          current.style.transform  = 'translateX(-100%)';
+          cell._active = isA ? 'b' : 'a';
+        }));
+      };
+
+      if (next.complete && next.src.includes(seed)) { doSlide(); }
+      else { next.onload = doSlide; next.src = `https://picsum.photos/seed/${seed}/600/400`; }
+    }
+
+    cells.forEach((cell, i) => {
+      const interval = 5000 + Math.random() * 3000;
+      setTimeout(() => { pushCell(cell); setInterval(() => pushCell(cell), interval); }, i * 800 + Math.random() * 1000);
+    });
+
+    // Menu scroll
+    document.querySelectorAll('.menu-item').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        document.querySelectorAll('.menu-item').forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    const sections = document.querySelectorAll('section');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => { if (window.scrollY >= sec.offsetTop - 120) current = sec.id; });
+      document.querySelectorAll('.menu-item').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    });
+
+    // Lightbox
+    const allImgs = document.querySelectorAll('.all-item img:not(.img-b)');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lightboxImg.src = allImgs[index].src;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function navigate(dir) {
+      currentIndex = (currentIndex + dir + allImgs.length) % allImgs.length;
+      lightboxImg.src = allImgs[currentIndex].src;
+    }
+
+    allImgs.forEach((img, i) => img.addEventListener('click', () => openLightbox(i)));
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev').addEventListener('click', () => navigate(-1));
+    document.getElementById('lightboxNext').addEventListener('click', () => navigate(1));
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+    });
+  </script>
+</body>
+</html>
