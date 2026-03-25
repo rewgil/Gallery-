@@ -196,13 +196,18 @@
     const CREDENTIALS = { user: '32485', pass: '301908' };
     let membersData = [];
 
-    // Login - bypassed temporarily
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
-    initAdmin();
-
+    // Login
     document.getElementById('loginForm').addEventListener('submit', e => {
       e.preventDefault();
+      const u = document.getElementById('loginUser').value.trim();
+      const p = document.getElementById('loginPass').value.trim();
+      if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        initAdmin();
+      } else {
+        document.getElementById('loginError').classList.add('show');
+      }
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
