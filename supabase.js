@@ -51,10 +51,20 @@ async function deletePhoto(id, url) {
 async function uploadAvatar(file, memberId) {
   const ext = file.name.split('.').pop();
   const path = `${memberId}.${ext}`;
-  await db.storage.from('avatars').upload(path, file, { upsert: true });
+  
+  // ลบไฟล์เก่าก่อน (ถ้ามี)
+  await db.storage.from('avatars').remove([path]);
+  
+  const { data: upData, error: upError } = await db.storage.from('avatars').upload(path, file, { upsert: true });
+  if (upError) { console.error('avatar upload error:', upError); return null; }
+  
   const { data } = db.storage.from('avatars').getPublicUrl(path);
-  await db.from('members').update({ avatar_url: data.publicUrl }).eq('id', memberId);
-  return data.publicUrl;
+  const url = data.publicUrl;
+  
+  const { error: dbError } = await db.from('members').update({ avatar_url: url }).eq('id', memberId);
+  if (dbError) { console.error('avatar db update error:', dbError); return null; }
+  
+  return url;
 }
 
 // ดึง settings

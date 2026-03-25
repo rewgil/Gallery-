@@ -379,6 +379,7 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e0dbd4;
+  display: block;
 }
 
 .avatar-edit {
