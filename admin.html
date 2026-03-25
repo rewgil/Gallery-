@@ -340,10 +340,29 @@
           <div class="avatar-status" id="avs-${m.id}"></div>
         `;
         const fileInput = card.querySelector('input[type="file"]');
-        fileInput.addEventListener('change', () => {
+        fileInput.addEventListener('change', async () => {
           const file = fileInput.files[0];
           if (!file) return;
-          openCropModal(file, m.id);
+          const statusEl = document.getElementById('avs-' + m.id);
+          const imgEl = document.getElementById('av-' + m.id);
+
+          const reader = new FileReader();
+          reader.onload = e => { imgEl.src = e.target.result; };
+          reader.readAsDataURL(file);
+
+          statusEl.textContent = 'Uploading...';
+          statusEl.className = 'avatar-status uploading';
+
+          const url = await uploadAvatar(file, m.id);
+          if (url) {
+            imgEl.src = url;
+            statusEl.textContent = 'Saved ✓';
+            statusEl.className = 'avatar-status saved';
+          } else {
+            statusEl.textContent = 'Error';
+            statusEl.className = 'avatar-status error';
+          }
+          setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'avatar-status'; }, 3000);
           fileInput.value = '';
         });
         grid.appendChild(card);
