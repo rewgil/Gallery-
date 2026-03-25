@@ -363,11 +363,13 @@ section {
 
   .menu {
     overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     justify-content: flex-start;
     flex-wrap: nowrap;
     gap: 0;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
   }
 
   .menu::-webkit-scrollbar { display: none; }
