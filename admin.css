@@ -400,6 +400,17 @@ body {
 
 .avatar-edit:hover { background: #8a7968; }
 
+.avatar-status {
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  min-height: 1em;
+  margin-top: 0.2rem;
+}
+
+.avatar-status.uploading { color: #8a7968; }
+.avatar-status.saved { color: #27ae60; }
+.avatar-status.error { color: #c0392b; }
+
 /* Quote editor */
 .form-group {
   margin-bottom: 1.2rem;
