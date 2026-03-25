@@ -357,7 +357,7 @@ section {
 @media (max-width: 768px) {
   header {
     padding: 0.5rem 0.8rem;
-    position: relative;
+    position: sticky;
     justify-content: flex-start;
   }
 
