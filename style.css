@@ -260,6 +260,7 @@ section {
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 240px 240px 160px;
   gap: 6px;
+  margin-bottom: 6px;
 }
 
 .all-item.a1 { grid-column: 1 / 3; grid-row: 1; }

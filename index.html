@@ -198,12 +198,16 @@
         let html = `<div class="section-title">${m.name}</div>`;
 
         if (photos.length > 0) {
-          html += '<div class="all-grid">';
-          const classes = ['a1','a2','a3','a4','a5','a6','a7','a8'];
-          photos.slice(0, 8).forEach((p, i) => {
-            html += `<div class="all-item ${classes[i] || ''}"><img src="${p.url}" alt="${m.name}" loading="lazy"></div>`;
-          });
-          html += '</div>';
+          // สร้าง grid ทีละ 8 รูป
+          for (let g = 0; g < photos.length; g += 8) {
+            const batch = photos.slice(g, g + 8);
+            html += '<div class="all-grid">';
+            const classes = ['a1','a2','a3','a4','a5','a6','a7','a8'];
+            batch.forEach((p, i) => {
+              html += `<div class="all-item ${classes[i] || ''}"><img src="${p.url}" alt="${m.name}" loading="lazy"></div>`;
+            });
+            html += '</div>';
+          }
         } else {
           html += '<p style="color:#b0a898;font-size:0.8rem;padding:1rem 0;">ยังไม่มีรูปภาพ</p>';
         }

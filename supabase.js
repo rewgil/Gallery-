@@ -52,14 +52,19 @@ async function uploadAvatar(file, memberId) {
   const ext = file.name.split('.').pop();
   const path = `${memberId}.${ext}`;
   
-  // ลบไฟล์เก่าก่อน (ถ้ามี)
-  await db.storage.from('avatars').remove([path]);
+  // ลองลบไฟล์เก่าทุกนามสกุล
+  const exts = ['jpg','jpeg','png','webp','gif'];
+  const removePaths = exts.map(e => `${memberId}.${e}`);
+  await db.storage.from('avatars').remove(removePaths);
   
-  const { data: upData, error: upError } = await db.storage.from('avatars').upload(path, file, { upsert: true });
+  const { data: upData, error: upError } = await db.storage.from('avatars').upload(path, file, { 
+    cacheControl: '0',
+    upsert: true 
+  });
   if (upError) { console.error('avatar upload error:', upError); return null; }
   
   const { data } = db.storage.from('avatars').getPublicUrl(path);
-  const url = data.publicUrl;
+  const url = data.publicUrl + '?v=' + Date.now();
   
   const { error: dbError } = await db.from('members').update({ avatar_url: url }).eq('id', memberId);
   if (dbError) { console.error('avatar db update error:', dbError); return null; }

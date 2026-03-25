@@ -306,15 +306,18 @@
         setTimeout(() => status.textContent = '', 2000);
         return;
       }
-      status.textContent = 'Uploading...';
+      status.textContent = `Uploading 0/${pendingFiles.length}...`;
       let count = 0;
-      for (const file of pendingFiles) {
+      const total = pendingFiles.length;
+      const uploads = pendingFiles.map(async (file) => {
         const url = await uploadPhoto(file, memberId);
         if (url) {
           await savePhotoRecord(memberId, url);
           count++;
+          status.textContent = `Uploading ${count}/${total}...`;
         }
-      }
+      });
+      await Promise.all(uploads);
       pendingFiles = [];
       status.textContent = `${count} photo(s) uploaded`;
       status.classList.add('success');
