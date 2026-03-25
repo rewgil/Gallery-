@@ -5,7 +5,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ดึง members ทั้งหมด
 async function getMembers() {
-  const { data, error } = await db.from('members').select('*');
+  const { data, error } = await db.from('members').select('*').order('sort_order', { ascending: true });
   if (error) console.error('getMembers error:', error);
   return data || [];
 }

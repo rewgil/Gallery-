@@ -221,7 +221,20 @@ section {
   margin-bottom: 1rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid #e0dbd4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.back-top {
+  font-style: normal;
+  font-size: 1rem;
+  color: #c4b8a8;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.back-top:hover { color: #8a7968; }
 
 .section-quote {
   text-align: center;
