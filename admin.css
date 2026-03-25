@@ -563,3 +563,97 @@ body {
   color: #5a5248;
   margin-bottom: 1.2rem;
 }
+
+/* Crop Modal */
+.crop-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crop-modal.hidden { display: none; }
+
+.crop-box {
+  background: #f5f2ee;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  width: 320px;
+  text-align: center;
+}
+
+.crop-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #2c2c2c;
+  margin-bottom: 1rem;
+}
+
+.crop-area {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 1rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #e0dbd4;
+  cursor: grab;
+  touch-action: none;
+}
+
+.crop-area:active { cursor: grabbing; }
+
+.crop-area img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: auto;
+  transform-origin: center center;
+  margin-top: -50%;
+  margin-left: -50%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.crop-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(138,121,104,0.4);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.crop-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  font-size: 0.65rem;
+  color: #a09080;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.crop-controls input[type="range"] {
+  flex: 1;
+  accent-color: #8a7968;
+}
+
+.crop-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+}
+
+.crop-actions .btn-primary,
+.crop-actions .btn-secondary {
+  width: auto;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.72rem;
+}

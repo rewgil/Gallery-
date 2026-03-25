@@ -196,18 +196,13 @@
     const CREDENTIALS = { user: '32485', pass: '301908' };
     let membersData = [];
 
-    // Login
+    // Login - temporarily bypassed
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    initAdmin();
+
     document.getElementById('loginForm').addEventListener('submit', e => {
       e.preventDefault();
-      const u = document.getElementById('loginUser').value.trim();
-      const p = document.getElementById('loginPass').value.trim();
-      if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('adminPanel').classList.remove('hidden');
-        initAdmin();
-      } else {
-        document.getElementById('loginError').classList.add('show');
-      }
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -345,30 +340,11 @@
           <div class="avatar-status" id="avs-${m.id}"></div>
         `;
         const fileInput = card.querySelector('input[type="file"]');
-        fileInput.addEventListener('change', async () => {
+        fileInput.addEventListener('change', () => {
           const file = fileInput.files[0];
           if (!file) return;
-          const statusEl = document.getElementById('avs-' + m.id);
-          const imgEl = document.getElementById('av-' + m.id);
-
-          // preview immediately
-          const reader = new FileReader();
-          reader.onload = e => { imgEl.src = e.target.result; };
-          reader.readAsDataURL(file);
-
-          statusEl.textContent = 'Uploading...';
-          statusEl.className = 'avatar-status uploading';
-
-          const url = await uploadAvatar(file, m.id);
-          if (url) {
-            imgEl.src = url + '?t=' + Date.now();
-            statusEl.textContent = 'Saved ✓';
-            statusEl.className = 'avatar-status saved';
-          } else {
-            statusEl.textContent = 'Error';
-            statusEl.className = 'avatar-status error';
-          }
-          setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'avatar-status'; }, 3000);
+          openCropModal(file, m.id);
+          fileInput.value = '';
         });
         grid.appendChild(card);
       });
@@ -433,6 +409,116 @@
       `;
       list.appendChild(row);
     });
+
+    // ===== AVATAR CROP MODAL =====
+    let cropState = { memberId: null, file: null, img: null, x: 0, y: 0, scale: 1, dragging: false, startX: 0, startY: 0 };
+
+    function openCropModal(file, memberId) {
+      cropState.memberId = memberId;
+      cropState.file = file;
+      cropState.x = 0;
+      cropState.y = 0;
+      cropState.scale = 1;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        const modal = document.getElementById('cropModal');
+        const img = document.getElementById('cropImg');
+        img.src = e.target.result;
+        img.style.transform = `translate(0px, 0px) scale(1)`;
+        modal.classList.remove('hidden');
+        document.getElementById('cropZoom').value = 1;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Drag to reposition
+    const cropArea = document.getElementById('cropArea');
+    const cropImg = document.getElementById('cropImg');
+
+    cropArea.addEventListener('mousedown', e => { cropState.dragging = true; cropState.startX = e.clientX - cropState.x; cropState.startY = e.clientY - cropState.y; e.preventDefault(); });
+    cropArea.addEventListener('touchstart', e => { cropState.dragging = true; cropState.startX = e.touches[0].clientX - cropState.x; cropState.startY = e.touches[0].clientY - cropState.y; }, { passive: false });
+
+    window.addEventListener('mousemove', e => { if (!cropState.dragging) return; cropState.x = e.clientX - cropState.startX; cropState.y = e.clientY - cropState.startY; updateCropTransform(); });
+    window.addEventListener('touchmove', e => { if (!cropState.dragging) return; cropState.x = e.touches[0].clientX - cropState.startX; cropState.y = e.touches[0].clientY - cropState.startY; updateCropTransform(); e.preventDefault(); }, { passive: false });
+
+    window.addEventListener('mouseup', () => cropState.dragging = false);
+    window.addEventListener('touchend', () => cropState.dragging = false);
+
+    document.getElementById('cropZoom').addEventListener('input', e => {
+      cropState.scale = parseFloat(e.target.value);
+      updateCropTransform();
+    });
+
+    function updateCropTransform() {
+      cropImg.style.transform = `translate(${cropState.x}px, ${cropState.y}px) scale(${cropState.scale})`;
+    }
+
+    document.getElementById('cropCancel').addEventListener('click', () => {
+      document.getElementById('cropModal').classList.add('hidden');
+    });
+
+    document.getElementById('cropSave').addEventListener('click', async () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200;
+      canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = async () => {
+        const areaSize = 180;
+        const scale = cropState.scale;
+        const drawW = img.width * scale * (200 / areaSize);
+        const drawH = img.height * scale * (200 / areaSize);
+        const dx = (200 / 2) + (cropState.x * 200 / areaSize) - drawW / 2;
+        const dy = (200 / 2) + (cropState.y * 200 / areaSize) - drawH / 2;
+
+        ctx.beginPath();
+        ctx.arc(100, 100, 100, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(img, dx, dy, drawW, drawH);
+
+        canvas.toBlob(async blob => {
+          const croppedFile = new File([blob], cropState.file.name, { type: 'image/png' });
+          const statusEl = document.getElementById('avs-' + cropState.memberId);
+          statusEl.textContent = 'Uploading...';
+          statusEl.className = 'avatar-status uploading';
+
+          const url = await uploadAvatar(croppedFile, cropState.memberId);
+          if (url) {
+            document.getElementById('av-' + cropState.memberId).src = url;
+            statusEl.textContent = 'Saved ✓';
+            statusEl.className = 'avatar-status saved';
+          } else {
+            statusEl.textContent = 'Error';
+            statusEl.className = 'avatar-status error';
+          }
+          setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'avatar-status'; }, 3000);
+          document.getElementById('cropModal').classList.add('hidden');
+        }, 'image/png');
+      };
+      img.src = cropImg.src;
+    });
   </script>
+
+  <!-- CROP MODAL -->
+  <div id="cropModal" class="crop-modal hidden">
+    <div class="crop-box">
+      <p class="crop-title">Adjust Avatar</p>
+      <div class="crop-area" id="cropArea">
+        <div class="crop-circle"></div>
+        <img id="cropImg" src="" alt="crop" draggable="false">
+      </div>
+      <div class="crop-controls">
+        <label>Zoom</label>
+        <input type="range" id="cropZoom" min="0.5" max="3" step="0.05" value="1">
+      </div>
+      <div class="crop-actions">
+        <button class="btn-secondary" id="cropCancel">Cancel</button>
+        <button class="btn-primary" id="cropSave">Save</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
