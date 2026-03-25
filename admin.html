@@ -411,7 +411,7 @@
     });
 
     // ===== AVATAR CROP MODAL =====
-    let cropState = { memberId: null, file: null, img: null, x: 0, y: 0, scale: 1, dragging: false, startX: 0, startY: 0 };
+    let cropState = { memberId: null, file: null, x: 0, y: 0, scale: 1, dragging: false, startX: 0, startY: 0, imgW: 0, imgH: 0 };
 
     function openCropModal(file, memberId) {
       cropState.memberId = memberId;
@@ -422,22 +422,24 @@
 
       const reader = new FileReader();
       reader.onload = e => {
-        const modal = document.getElementById('cropModal');
         const img = document.getElementById('cropImg');
+        img.onload = () => {
+          cropState.imgW = img.naturalWidth;
+          cropState.imgH = img.naturalHeight;
+          updateCropTransform();
+        };
         img.src = e.target.result;
-        img.style.transform = `translate(0px, 0px) scale(1)`;
-        modal.classList.remove('hidden');
+        document.getElementById('cropModal').classList.remove('hidden');
         document.getElementById('cropZoom').value = 1;
       };
       reader.readAsDataURL(file);
     }
 
-    // Drag to reposition
     const cropArea = document.getElementById('cropArea');
     const cropImg = document.getElementById('cropImg');
 
     cropArea.addEventListener('mousedown', e => { cropState.dragging = true; cropState.startX = e.clientX - cropState.x; cropState.startY = e.clientY - cropState.y; e.preventDefault(); });
-    cropArea.addEventListener('touchstart', e => { cropState.dragging = true; cropState.startX = e.touches[0].clientX - cropState.x; cropState.startY = e.touches[0].clientY - cropState.y; }, { passive: false });
+    cropArea.addEventListener('touchstart', e => { cropState.dragging = true; cropState.startX = e.touches[0].clientX - cropState.x; cropState.startY = e.touches[0].clientY - cropState.y; e.preventDefault(); }, { passive: false });
 
     window.addEventListener('mousemove', e => { if (!cropState.dragging) return; cropState.x = e.clientX - cropState.startX; cropState.y = e.clientY - cropState.startY; updateCropTransform(); });
     window.addEventListener('touchmove', e => { if (!cropState.dragging) return; cropState.x = e.touches[0].clientX - cropState.startX; cropState.y = e.touches[0].clientY - cropState.startY; updateCropTransform(); e.preventDefault(); }, { passive: false });
@@ -459,28 +461,37 @@
     });
 
     document.getElementById('cropSave').addEventListener('click', async () => {
+      const saveBtn = document.getElementById('cropSave');
+      saveBtn.textContent = 'Saving...';
+      saveBtn.disabled = true;
+
+      const size = 400;
       const canvas = document.createElement('canvas');
-      canvas.width = 200;
-      canvas.height = 200;
+      canvas.width = size;
+      canvas.height = size;
       const ctx = canvas.getContext('2d');
 
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = async () => {
-        const areaSize = 180;
-        const scale = cropState.scale;
-        const drawW = img.width * scale * (200 / areaSize);
-        const drawH = img.height * scale * (200 / areaSize);
-        const dx = (200 / 2) + (cropState.x * 200 / areaSize) - drawW / 2;
-        const dy = (200 / 2) + (cropState.y * 200 / areaSize) - drawH / 2;
+        // crop area is 180px, output is 400px
+        const ratio = size / 180;
+        const s = cropState.scale;
+
+        // fill the canvas based on drag offset and zoom
+        const drawW = size * s;
+        const drawH = (img.naturalHeight / img.naturalWidth) * size * s;
+        const dx = (size - drawW) / 2 + cropState.x * ratio;
+        const dy = (size - drawH) / 2 + cropState.y * ratio;
 
         ctx.beginPath();
-        ctx.arc(100, 100, 100, 0, Math.PI * 2);
+        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
         ctx.clip();
         ctx.drawImage(img, dx, dy, drawW, drawH);
 
         canvas.toBlob(async blob => {
-          const croppedFile = new File([blob], cropState.file.name, { type: 'image/png' });
+          if (!blob) { saveBtn.textContent = 'Save'; saveBtn.disabled = false; return; }
+          const croppedFile = new File([blob], 'avatar.png', { type: 'image/png' });
           const statusEl = document.getElementById('avs-' + cropState.memberId);
           statusEl.textContent = 'Uploading...';
           statusEl.className = 'avatar-status uploading';
@@ -496,6 +507,8 @@
           }
           setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'avatar-status'; }, 3000);
           document.getElementById('cropModal').classList.add('hidden');
+          saveBtn.textContent = 'Save';
+          saveBtn.disabled = false;
         }, 'image/png');
       };
       img.src = cropImg.src;
