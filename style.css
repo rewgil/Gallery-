@@ -381,15 +381,7 @@ section {
   .menu-item span { font-size: 0.48rem; }
 
   .dev-credit { display: none; }
-  .gear-btn {
-    position: static;
-    flex-shrink: 0;
-    order: 999;
-    display: flex;
-    align-items: center;
-    padding: 0.3rem 0.5rem;
-    font-size: 0.9rem;
-  }
+  .gear-btn { display: none; }
 
   main { padding: 0.8rem 0.4rem 3rem; }
 
