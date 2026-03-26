@@ -99,6 +99,7 @@
 
         <div class="action-row">
           <button class="btn-primary" id="savePhotosBtn">Save Changes</button>
+          <button class="btn-danger" id="deleteAllPhotosBtn">Delete All</button>
           <span class="save-status" id="saveStatus"></span>
         </div>
       </section>
@@ -293,6 +294,31 @@
 
     document.getElementById('photoMemberSelect').addEventListener('change', loadPhotos);
 
+    document.getElementById('deleteAllPhotosBtn').addEventListener('click', async () => {
+      const memberId = document.getElementById('photoMemberSelect').value;
+      const status = document.getElementById('saveStatus');
+      if (!confirm(`Delete ALL photos for "${memberId}"?`)) return;
+
+      status.textContent = 'Deleting all...';
+      const photos = await getPhotos(memberId);
+      let count = 0;
+      const BATCH_SIZE = 5;
+      for (let i = 0; i < photos.length; i += BATCH_SIZE) {
+        const batch = photos.slice(i, i + BATCH_SIZE);
+        await Promise.allSettled(batch.map(async (p) => {
+          await deletePhoto(p.id, p.url);
+          count++;
+          status.textContent = `Deleting ${count}/${photos.length}...`;
+        }));
+      }
+      previewGrid.innerHTML = '';
+      pendingFiles = [];
+      status.textContent = `${count} photo(s) deleted`;
+      status.classList.add('success');
+      setTimeout(() => { status.textContent = ''; status.classList.remove('success'); }, 3000);
+      loadPhotos();
+    });
+
     document.getElementById('savePhotosBtn').addEventListener('click', async () => {
       const status = document.getElementById('saveStatus');
       const memberId = document.getElementById('photoMemberSelect').value;
@@ -301,20 +327,31 @@
         setTimeout(() => status.textContent = '', 2000);
         return;
       }
-      status.textContent = `Uploading 0/${pendingFiles.length}...`;
-      let count = 0;
       const total = pendingFiles.length;
-      const uploads = pendingFiles.map(async (file) => {
-        const url = await uploadPhoto(file, memberId);
-        if (url) {
-          await savePhotoRecord(memberId, url);
-          count++;
-          status.textContent = `Uploading ${count}/${total}...`;
-        }
-      });
-      await Promise.all(uploads);
+      let count = 0;
+      let failed = 0;
+      status.textContent = `Uploading 0/${total}...`;
+
+      const BATCH_SIZE = 5;
+      for (let i = 0; i < total; i += BATCH_SIZE) {
+        const batch = pendingFiles.slice(i, i + BATCH_SIZE);
+        const results = await Promise.allSettled(batch.map(async (file) => {
+          const url = await uploadPhoto(file, memberId);
+          if (url) {
+            await savePhotoRecord(memberId, url);
+            count++;
+          } else {
+            failed++;
+          }
+          status.textContent = `Uploading ${count + failed}/${total}...`;
+        }));
+      }
+
       pendingFiles = [];
-      status.textContent = `${count} photo(s) uploaded`;
+      previewGrid.innerHTML = '';
+      status.textContent = failed > 0
+        ? `${count} uploaded, ${failed} failed`
+        : `${count} photo(s) uploaded`;
       status.classList.add('success');
       setTimeout(() => { status.textContent = ''; status.classList.remove('success'); }, 3000);
       loadPhotos();

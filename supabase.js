@@ -27,7 +27,8 @@ async function getAllPhotos() {
 // อัปโหลดรูปไป Storage
 async function uploadPhoto(file, memberId) {
   const ext = file.name.split('.').pop();
-  const path = `${memberId}/${Date.now()}.${ext}`;
+  const unique = Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  const path = `${memberId}/${unique}.${ext}`;
   const { data, error } = await db.storage.from('photos').upload(path, file);
   if (error) { console.error('upload error:', error); return null; }
   const { data: urlData } = db.storage.from('photos').getPublicUrl(path);
