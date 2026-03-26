@@ -92,6 +92,12 @@ function thumbUrl(url, quality = 60) {
   return url.replace('/object/public/', '/render/image/public/') + '?quality=' + quality;
 }
 
+// Tiny placeholder for blur-up effect (20px wide, very fast)
+function tinyUrl(url) {
+  if (!url || !url.includes('/object/public/')) return url;
+  return url.replace('/object/public/', '/render/image/public/') + '?width=20&quality=20';
+}
+
 function fullUrl(url) {
   return url;
 }
