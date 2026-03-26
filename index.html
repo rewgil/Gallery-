@@ -225,7 +225,7 @@
       const menu = document.getElementById('menu');
       menu.innerHTML = '';
       members.forEach((m, i) => {
-        const avatar = m.avatar_url ? thumbUrl(m.avatar_url, 100, 60) : `https://picsum.photos/seed/${m.id}/200/200`;
+        const avatar = m.avatar_url ? thumbUrl(m.avatar_url, 50) : `https://picsum.photos/seed/${m.id}/200/200`;
         const a = document.createElement('a');
         a.href = '#' + m.id;
         a.className = 'menu-item' + (i === 0 ? ' active' : '');
@@ -265,7 +265,7 @@
         container.appendChild(sec);
       }
       const displayPhotos = allPhotos.filter(p => p.member_id === 'display');
-      const allUrls = displayPhotos.length > 0 ? displayPhotos.map(p => thumbUrl(p.url, 1000, 65)) : allPhotos.map(p => thumbUrl(p.url, 1000, 65));
+      const allUrls = displayPhotos.length > 0 ? displayPhotos.map(p => thumbUrl(p.url)) : allPhotos.map(p => thumbUrl(p.url));
       if (allUrls.length > 0) initDisplaySlideshow(allUrls);
       setupMenuScroll();
       setupLightbox();
@@ -344,9 +344,9 @@
       const dlBtn = document.getElementById('lightboxDownload');
       let idx = 0;
       function updateDl() { dlBtn.href = imgs[idx].dataset.original || imgs[idx].src; }
-      function open(i) { idx = i; lightboxImg.src = imgs[i].dataset.full || imgs[i].src; updateDl(); lightbox.classList.add('active'); document.body.style.overflow = 'hidden'; }
+      function open(i) { idx = i; lightboxImg.src = imgs[i].dataset.original || imgs[i].src; updateDl(); lightbox.classList.add('active'); document.body.style.overflow = 'hidden'; }
       function close() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
-      function nav(d) { idx = (idx + d + imgs.length) % imgs.length; lightboxImg.src = imgs[idx].dataset.full || imgs[idx].src; updateDl(); }
+      function nav(d) { idx = (idx + d + imgs.length) % imgs.length; lightboxImg.src = imgs[idx].dataset.original || imgs[idx].src; updateDl(); }
       imgs.forEach((img, i) => img.addEventListener('click', () => open(i)));
       document.getElementById('lightboxClose').addEventListener('click', close);
       document.getElementById('lightboxPrev').addEventListener('click', () => nav(-1));
