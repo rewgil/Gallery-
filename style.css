@@ -378,7 +378,7 @@ section {
 
   .menu-item { padding: 0.35rem 0.5rem; }
 
-  .avatar { width: 54px; height: 54px; }
+  .avatar { width: 68px; height: 68px; }
 
   .menu-item span { font-size: 0.5rem; }
 
@@ -450,7 +450,7 @@ section {
 
 /* Small phones */
 @media (max-width: 380px) {
-  .avatar { width: 46px; height: 46px; }
+  .avatar { width: 58px; height: 58px; }
   .menu-item span { font-size: 0.42rem; }
   .menu-item { padding: 0.2rem 0.35rem; }
 
