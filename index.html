@@ -254,7 +254,7 @@
             html += '<div class="all-grid">';
             const classes = ['a1','a2','a3','a4','a5','a6','a7','a8'];
             batch.forEach((p, i) => {
-              html += `<div class="all-item ${classes[i] || ''}"><img src="${thumbUrl(p.url)}" data-full="${fullUrl(p.url)}" data-original="${p.url}" alt="${m.name}" loading="lazy"></div>`;
+              html += `<div class="all-item ${classes[i] || ''}"><img src="${tinyUrl(p.url)}" data-src="${thumbUrl(p.url)}" data-original="${p.url}" alt="${m.name}" class="loading"></div>`;
             });
             html += '</div>';
           }
@@ -269,6 +269,7 @@
       if (allUrls.length > 0) initDisplaySlideshow(allUrls);
       setupMenuScroll();
       setupLightbox();
+      setupLazyLoad();
     }
 
     function initDisplaySlideshow(urls) {
