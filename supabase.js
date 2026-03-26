@@ -85,3 +85,14 @@ async function getSettings() {
 async function updateSetting(key, value) {
   await db.from('settings').upsert({ key, value });
 }
+
+// Image optimization: convert public URL to resized/optimized URL
+function thumbUrl(url, width = 400, quality = 60) {
+  if (!url || !url.includes('/object/public/')) return url;
+  return url.replace('/object/public/', '/render/image/public/') + '?width=' + width + '&quality=' + quality;
+}
+
+function fullUrl(url, width = 1200, quality = 75) {
+  if (!url || !url.includes('/object/public/')) return url;
+  return url.replace('/object/public/', '/render/image/public/') + '?width=' + width + '&quality=' + quality;
+}
