@@ -315,24 +315,6 @@ section {
 .slide-cell .img-b { transform: translateX(100%); z-index: 2; }
 
 
-/* Blur-up progressive loading */
-.all-item > img,
-.slide-cell .img-a,
-.slide-cell .img-b {
-  filter: blur(0);
-  transition: filter 0.4s ease;
-}
-
-.all-item > img.loading {
-  filter: blur(15px);
-  transform: scale(1.05);
-}
-
-.all-item > img.loaded {
-  filter: blur(0);
-  transform: scale(1);
-  transition: filter 0.5s ease, transform 0.5s ease;
-}
 /* Lightbox */
 .lightbox {
   display: none;

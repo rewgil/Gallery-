@@ -225,7 +225,7 @@
       const menu = document.getElementById('menu');
       menu.innerHTML = '';
       members.forEach((m, i) => {
-        const avatar = m.avatar_url ? thumbUrl(m.avatar_url, 50) : `https://picsum.photos/seed/${m.id}/200/200`;
+        const avatar = m.avatar_url ? m.avatar_url : `https://picsum.photos/seed/${m.id}/200/200`;
         const a = document.createElement('a');
         a.href = '#' + m.id;
         a.className = 'menu-item' + (i === 0 ? ' active' : '');
@@ -254,7 +254,7 @@
             html += '<div class="all-grid">';
             const classes = ['a1','a2','a3','a4','a5','a6','a7','a8'];
             batch.forEach((p, i) => {
-              html += `<div class="all-item ${classes[i] || ''}"><img src="${tinyUrl(p.url)}" data-src="${thumbUrl(p.url)}" data-original="${p.url}" alt="${m.name}" class="loading"></div>`;
+              html += `<div class="all-item ${classes[i] || ''}"><img src="${p.url}" alt="${m.name}" loading="lazy"></div>`;
             });
             html += '</div>';
           }
@@ -265,11 +265,10 @@
         container.appendChild(sec);
       }
       const displayPhotos = allPhotos.filter(p => p.member_id === 'display');
-      const allUrls = displayPhotos.length > 0 ? displayPhotos.map(p => thumbUrl(p.url)) : allPhotos.map(p => thumbUrl(p.url));
+      const allUrls = displayPhotos.length > 0 ? displayPhotos.map(p => p.url) : allPhotos.map(p => p.url);
       if (allUrls.length > 0) initDisplaySlideshow(allUrls);
       setupMenuScroll();
       setupLightbox();
-      setupLazyLoad();
     }
 
     function initDisplaySlideshow(urls) {
@@ -342,12 +341,10 @@
       const imgs = document.querySelectorAll('.all-item img:not(.img-b)');
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
-      const dlBtn = document.getElementById('lightboxDownload');
       let idx = 0;
-      function updateDl() { dlBtn.href = imgs[idx].dataset.original || imgs[idx].src; }
-      function open(i) { idx = i; lightboxImg.src = imgs[i].dataset.original || imgs[i].src; updateDl(); lightbox.classList.add('active'); document.body.style.overflow = 'hidden'; }
+      function open(i) { idx = i; lightboxImg.src = imgs[i].src; lightbox.classList.add('active'); document.body.style.overflow = 'hidden'; }
       function close() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
-      function nav(d) { idx = (idx + d + imgs.length) % imgs.length; lightboxImg.src = imgs[idx].dataset.original || imgs[idx].src; updateDl(); }
+      function nav(d) { idx = (idx + d + imgs.length) % imgs.length; lightboxImg.src = imgs[idx].src; }
       imgs.forEach((img, i) => img.addEventListener('click', () => open(i)));
       document.getElementById('lightboxClose').addEventListener('click', close);
       document.getElementById('lightboxPrev').addEventListener('click', () => nav(-1));
