@@ -4,10 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photo Gallery</title>
+
+  <!-- Preconnect: fonts + supabase + CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&family=Noto+Sans+Thai:wght@300;400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://slximhnkvcevjwrtdpns.supabase.co">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <!-- Priority: Thai font for quiz screen (first thing user sees) -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400&display=swap" rel="stylesheet">
+
+  <!-- Defer other fonts (needed after quiz) -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet"></noscript>
+
+  <!-- Critical CSS inline -->
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Montserrat','Noto Sans Thai',sans-serif;background:#f5f2ee;color:#2c2c2c;min-height:100vh}
+    .quiz-screen{position:fixed;inset:0;background:#f5f2ee;z-index:9999;display:flex;align-items:center;justify-content:center}
+    .quiz-box{text-align:center;max-width:480px;padding:0 1.5rem}
+    .quiz-label{font-family:'Noto Sans Thai',sans-serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#b0a898;margin-bottom:1.2rem}
+    .quiz-question{font-family:'Noto Sans Thai',sans-serif;font-weight:300;font-size:1.2rem;color:#2c2c2c;line-height:1.8;margin-bottom:2rem}
+    .quiz-options{display:flex;flex-direction:column;gap:.7rem}
+    .quiz-opt{padding:.75rem 1.5rem;background:#fff;border:1px solid #e0dbd4;border-radius:8px;font-family:'Noto Sans Thai',sans-serif;font-size:.85rem;font-weight:300;color:#5a5248;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+    .quiz-opt:hover{border-color:#8a7968;background:#faf8f5}
+    .quiz-opt.correct{border-color:#8a7968;background:#8a7968;color:#fff}
+    .quiz-opt.wrong{border-color:#c0392b;background:#fdf0ee;color:#c0392b}
+    .quiz-feedback{margin-top:1rem;font-family:'Noto Sans Thai',sans-serif;font-size:.8rem;color:#c0392b;min-height:1.2em}
+    header{position:sticky;top:0;z-index:100;background:#f5f2ee;border-bottom:1px solid #e0dbd4;padding:.6rem 2rem;display:flex;align-items:center;justify-content:center}
+    .header-hidden{transform:translateY(-100%);opacity:0}
+    .header-slide-in{animation:headerIn .5s ease forwards}
+    @keyframes headerIn{to{transform:translateY(0);opacity:1}}
+    .menu{display:flex;align-items:center;justify-content:center;gap:.2rem;flex-wrap:wrap}
+    .menu-item{display:flex;flex-direction:column;align-items:center;gap:.3rem;text-decoration:none;padding:.4rem .7rem;flex-shrink:0;position:relative;opacity:0;transform:translateY(-24px)}
+    .menu-item.drop-in{animation:menuDrop .5s cubic-bezier(.34,1.56,.64,1) forwards}
+    @keyframes menuDrop{to{opacity:1;transform:translateY(0)}}
+    .avatar{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid transparent;transition:border-color .2s,transform .2s}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .menu-item span{font-size:.6rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:#a09080;transition:color .2s;white-space:nowrap}
+    .section-quote{text-align:center;margin-bottom:1.8rem;padding-bottom:1.4rem;border-bottom:1px solid #e0dbd4}
+    .section-quote blockquote{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:300;font-style:italic;color:#5a5248;line-height:1.7;border:none;margin:0;padding:0}
+    .section-quote cite{display:block;margin-top:.5rem;font-size:.7rem;font-weight:400;font-style:normal;letter-spacing:.15em;color:#b0a898;text-transform:uppercase}
+    .all-grid{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:240px 240px 160px;gap:6px;margin-bottom:6px}
+    .all-item{overflow:hidden;border-radius:6px;cursor:pointer}
+    .all-item.a1{grid-column:1/3;grid-row:1}.all-item.a2{grid-column:1/3;grid-row:2/4}.all-item.a3{grid-column:3/5;grid-row:1/3}.all-item.a4{grid-column:3/5;grid-row:3}.all-item.a5{grid-column:5/7;grid-row:1}.all-item.a6{grid-column:5/7;grid-row:2}.all-item.a7{grid-column:5;grid-row:3}.all-item.a8{grid-column:6;grid-row:3}
+    .slide-cell{position:relative;width:100%;height:100%;overflow:hidden}
+    .slide-cell .img-a,.slide-cell .img-b{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;will-change:transform}
+    .slide-cell .img-a{transform:translateX(0%);z-index:1}.slide-cell .img-b{transform:translateX(100%);z-index:2}
+    main{max-width:1600px;margin:0 auto;padding:2rem .8rem 4rem}
+    section{margin-bottom:4rem;scroll-margin-top:100px}
+    .gear-btn{position:absolute;right:1rem;font-size:.95rem;color:#c4b8a8;text-decoration:none;transition:color .2s,transform .4s;line-height:1}
+    .dev-credit{position:absolute;right:2.4rem;font-size:.62rem;font-weight:300;letter-spacing:.12em;color:#c4b8a8}
+    @media(max-width:768px){
+      header{padding:.5rem .8rem;justify-content:flex-start}
+      .menu{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;justify-content:flex-start;flex-wrap:nowrap;gap:0;-webkit-overflow-scrolling:touch;touch-action:pan-x}
+      .menu::-webkit-scrollbar{display:none}
+      .menu-item{padding:.3rem .45rem}.avatar{width:34px;height:34px}.menu-item span{font-size:.48rem}
+      .dev-credit,.gear-btn{display:none}
+      main{padding:.8rem .4rem 3rem}section{margin-bottom:2rem;scroll-margin-top:90px}
+      .section-quote{margin-bottom:1rem;padding-bottom:.8rem}.section-quote blockquote{font-size:.95rem}.section-quote cite{font-size:.58rem}
+      .all-grid{grid-template-columns:1fr 1fr;grid-template-rows:160px 160px 120px 120px;gap:3px}
+      .all-item.a1{grid-column:1;grid-row:1}.all-item.a2{grid-column:2;grid-row:1/3}.all-item.a3{grid-column:1;grid-row:2}.all-item.a4{grid-column:1/3;grid-row:3}.all-item.a5{grid-column:1;grid-row:4}.all-item.a6{grid-column:2;grid-row:4}.all-item.a7{display:none}.all-item.a8{display:none}
+      .all-item{border-radius:4px}
+      .quiz-box{max-width:340px}.quiz-question{font-size:1rem;margin-bottom:1.5rem}.quiz-opt{font-size:.78rem;padding:.6rem 1rem}.quiz-label{font-size:.58rem}
+    }
+    @media(max-width:380px){.avatar{width:28px;height:28px}.menu-item span{font-size:.42rem}.menu-item{padding:.2rem .35rem}.all-grid{grid-template-rows:130px 130px 100px 100px}.section-quote blockquote{font-size:.85rem}.quiz-question{font-size:.9rem}.quiz-opt{font-size:.72rem}}
+  </style>
+
+  <!-- Full stylesheet async -->
+  <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="style.css"></noscript>
+
+  <!-- Supabase SDK deferred -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -26,17 +96,15 @@
     </div>
   </div>
 
-  <!-- CONFETTI CANVAS -->
   <canvas id="confetti" style="position:fixed;inset:0;pointer-events:none;z-index:999;display:none;"></canvas>
 
-  <header>
+  <header class="header-hidden">
     <div class="dev-credit">Dev by Sorrawich</div>
     <nav class="menu" id="menu"></nav>
     <a href="admin.html" class="gear-btn" title="Admin">&#9881;</a>
   </header>
 
   <main>
-
     <section id="display">
       <div class="section-quote">
         <blockquote>
@@ -55,12 +123,9 @@
         <div class="all-item a8"><div class="slide-cell"><img class="img-a" src="" alt="Display 8"><img class="img-b" src="" alt="Display 8"></div></div>
       </div>
     </section>
-
     <div id="memberSections"></div>
-
   </main>
 
-  <!-- Lightbox -->
   <div class="lightbox" id="lightbox">
     <button class="lightbox-close" id="lightboxClose" aria-label="ปิด">&times;</button>
     <button class="lightbox-prev" id="lightboxPrev" aria-label="ก่อนหน้า">&#10094;</button>
@@ -68,16 +133,14 @@
     <button class="lightbox-next" id="lightboxNext" aria-label="ถัดไป">&#10095;</button>
   </div>
 
-  <script src="supabase.js"></script>
-  <script>
-    // Menu item stagger delay - triggered after quiz
+  <script defer src="supabase.js"></script>
+  <script defer>
     function triggerMenuAnimation() {
       document.querySelectorAll('.menu-item').forEach((item, i) => {
         setTimeout(() => item.classList.add('drop-in'), i * 80);
       });
     }
 
-    // Quiz
     const quizScreen = document.getElementById('quizScreen');
     const feedback = document.getElementById('quizFeedback');
 
@@ -106,48 +169,33 @@
       });
     });
 
-    // Confetti
     function launchConfetti() {
       const canvas = document.getElementById('confetti');
       const ctx = canvas.getContext('2d');
       canvas.style.display = 'block';
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-
       const colors = ['#c4b8a8','#8a7968','#e0dbd4','#5a5248','#d4cdc4','#f5f2ee','#a09080'];
       const pieces = Array.from({ length: 80 }, () => ({
-        x: Math.random() * canvas.width,
-        y: -10 - Math.random() * 100,
-        w: 6 + Math.random() * 6,
-        h: 3 + Math.random() * 4,
+        x: Math.random() * canvas.width, y: -10 - Math.random() * 100,
+        w: 6 + Math.random() * 6, h: 3 + Math.random() * 4,
         color: colors[Math.floor(Math.random() * colors.length)],
-        rot: Math.random() * Math.PI * 2,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: 1.5 + Math.random() * 2,
-        vr: (Math.random() - 0.5) * 0.1,
-        opacity: 1
+        rot: Math.random() * Math.PI * 2, vx: (Math.random() - 0.5) * 1.5,
+        vy: 1.5 + Math.random() * 2, vr: (Math.random() - 0.5) * 0.1, opacity: 1
       }));
-
-      let frame;
-      let elapsed = 0;
-
+      let frame, elapsed = 0;
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         elapsed++;
         let alive = false;
         pieces.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.rot += p.vr;
+          p.x += p.vx; p.y += p.vy; p.rot += p.vr;
           if (elapsed > 80) p.opacity -= 0.012;
           if (p.opacity > 0 && p.y < canvas.height + 20) {
             alive = true;
-            ctx.save();
-            ctx.globalAlpha = Math.max(0, p.opacity);
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rot);
-            ctx.fillStyle = p.color;
-            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.save(); ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+            ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
             ctx.restore();
           }
         });
@@ -157,13 +205,10 @@
       draw();
     }
 
-    // Load data from Supabase
     async function loadSiteData() {
       const members = await getMembers();
       const allPhotos = await getAllPhotos();
       const settings = await getSettings();
-
-      // Build menu
       const menu = document.getElementById('menu');
       menu.innerHTML = '';
       members.forEach((m, i) => {
@@ -174,8 +219,6 @@
         a.innerHTML = `<div class="avatar"><img src="${avatar}" alt="${m.name}"></div><span>${m.name}</span>`;
         menu.appendChild(a);
       });
-
-      // Update quote from settings
       if (settings.quote_text) {
         const bq = document.querySelector('.section-quote blockquote');
         if (bq) {
@@ -184,21 +227,15 @@
           if (cite && settings.quote_author) cite.textContent = settings.quote_author;
         }
       }
-
-      // Build member sections (skip display, it's already in HTML)
       const container = document.getElementById('memberSections');
       container.innerHTML = '';
       const nonDisplay = members.filter(m => m.id !== 'display');
-
       for (const m of nonDisplay) {
         const photos = allPhotos.filter(p => p.member_id === m.id);
         const sec = document.createElement('section');
         sec.id = m.id;
-
         let html = `<div class="section-title">${m.name}</div>`;
-
         if (photos.length > 0) {
-          // สร้าง grid ทีละ 8 รูป
           for (let g = 0; g < photos.length; g += 8) {
             const batch = photos.slice(g, g + 8);
             html += '<div class="all-grid">';
@@ -211,20 +248,12 @@
         } else {
           html += '<p style="color:#b0a898;font-size:0.8rem;padding:1rem 0;">ยังไม่มีรูปภาพ</p>';
         }
-
         sec.innerHTML = html;
         container.appendChild(sec);
       }
-
-      // Display section: use all photos for slideshow
       const displayPhotos = allPhotos.filter(p => p.member_id === 'display');
       const allUrls = displayPhotos.length > 0 ? displayPhotos.map(p => p.url) : allPhotos.map(p => p.url);
-
-      if (allUrls.length > 0) {
-        initDisplaySlideshow(allUrls);
-      }
-
-      // Setup menu scroll & lightbox after DOM is built
+      if (allUrls.length > 0) initDisplaySlideshow(allUrls);
       setupMenuScroll();
       setupLightbox();
     }
@@ -233,12 +262,10 @@
       const cells = document.querySelectorAll('#allMosaic .slide-cell');
       let pool = shuffle([...urls]);
       let poolIdx = 0;
-
       function nextUrl() {
         if (poolIdx >= pool.length) { pool = shuffle([...urls]); poolIdx = 0; }
         return pool[poolIdx++];
       }
-
       cells.forEach(cell => {
         const imgA = cell.querySelector('.img-a');
         const imgB = cell.querySelector('.img-b');
@@ -246,7 +273,6 @@
         imgB.src = nextUrl();
         cell._active = 'a';
       });
-
       function pushCell(cell) {
         const imgA = cell.querySelector('.img-a');
         const imgB = cell.querySelector('.img-b');
@@ -254,12 +280,10 @@
         const current = isA ? imgA : imgB;
         const next = isA ? imgB : imgA;
         const url = nextUrl();
-
         next.style.transition = 'none';
         next.style.transform = 'translateX(100%)';
         next.style.zIndex = '2';
         current.style.zIndex = '1';
-
         const doSlide = () => {
           requestAnimationFrame(() => requestAnimationFrame(() => {
             const t = 'transform 0.7s ease-in-out';
@@ -270,11 +294,9 @@
             cell._active = isA ? 'b' : 'a';
           }));
         };
-
         next.onload = doSlide;
         next.src = url;
       }
-
       cells.forEach((cell, i) => {
         const interval = 5000 + Math.random() * 3000;
         setTimeout(() => { pushCell(cell); setInterval(() => pushCell(cell), interval); }, i * 800 + Math.random() * 1000);
@@ -291,7 +313,6 @@
           link.classList.add('active');
         });
       });
-
       window.addEventListener('scroll', () => {
         let current = '';
         document.querySelectorAll('section').forEach(sec => {
@@ -308,11 +329,9 @@
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       let idx = 0;
-
       function open(i) { idx = i; lightboxImg.src = imgs[i].src; lightbox.classList.add('active'); document.body.style.overflow = 'hidden'; }
       function close() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
       function nav(d) { idx = (idx + d + imgs.length) % imgs.length; lightboxImg.src = imgs[idx].src; }
-
       imgs.forEach((img, i) => img.addEventListener('click', () => open(i)));
       document.getElementById('lightboxClose').addEventListener('click', close);
       document.getElementById('lightboxPrev').addEventListener('click', () => nav(-1));
@@ -335,8 +354,14 @@
       return a;
     }
 
-    // Init on page load
-    loadSiteData();
+    function boot() {
+      if (typeof supabase !== 'undefined' && typeof db !== 'undefined') {
+        loadSiteData();
+      } else {
+        setTimeout(boot, 50);
+      }
+    }
+    boot();
   </script>
 </body>
 </html>
