@@ -265,7 +265,7 @@
         container.appendChild(sec);
       }
       const displayPhotos = allPhotos.filter(p => p.member_id === 'display');
-      const allUrls = displayPhotos.length > 0 ? displayPhotos.map(p => thumbUrl(p.url, 600, 65)) : allPhotos.map(p => thumbUrl(p.url, 600, 65));
+      const allUrls = displayPhotos.length > 0 ? displayPhotos.map(p => thumbUrl(p.url, 1000, 65)) : allPhotos.map(p => thumbUrl(p.url, 1000, 65));
       if (allUrls.length > 0) initDisplaySlideshow(allUrls);
       setupMenuScroll();
       setupLightbox();

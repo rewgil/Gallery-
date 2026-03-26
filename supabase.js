@@ -87,7 +87,7 @@ async function updateSetting(key, value) {
 }
 
 // Image optimization: convert public URL to resized/optimized URL
-function thumbUrl(url, width = 400, quality = 60) {
+function thumbUrl(url, width = 800, quality = 65) {
   if (!url || !url.includes('/object/public/')) return url;
   return url.replace('/object/public/', '/render/image/public/') + '?width=' + width + '&quality=' + quality;
 }
