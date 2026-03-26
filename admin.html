@@ -194,16 +194,21 @@
 
   <script src="supabase.js"></script>
   <script>
-    const CREDENTIALS = { user: '32485', pass: '301908' };
+    const CREDENTIALS = { user: '32485', pass: '1234' };
     let membersData = [];
-
-    // Login - temporarily bypassed
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
-    initAdmin();
 
     document.getElementById('loginForm').addEventListener('submit', e => {
       e.preventDefault();
+      const user = document.getElementById('loginUser').value;
+      const pass = document.getElementById('loginPass').value;
+      if (user === CREDENTIALS.user && pass === CREDENTIALS.pass) {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        document.getElementById('loginError').style.display = 'none';
+        initAdmin();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
